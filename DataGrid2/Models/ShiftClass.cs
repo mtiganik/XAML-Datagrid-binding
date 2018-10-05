@@ -10,7 +10,7 @@ namespace DataGrid2.Models
     {
         public string Shift { get; set; }
         public int Products { get; set; }
-        public double FontSize { get; set; }
+        public bool IsCurrent { get; set; }
 
         
     }

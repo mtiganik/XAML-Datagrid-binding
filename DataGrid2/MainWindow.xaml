@@ -5,31 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataGrid2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Foreground="Yellow" FontStyle="Italic" FontWeight="ExtraBold" Background="ForestGreen" Height="450" Width="800">
+
     <Window.Resources>
-        <CollectionViewSource x:Key="ItemCollectionViewSource"  CollectionViewType="ListCollectionView"/>
+        <local:BooleanToFontSizeConverter x:Key="FontConverter" />
+        <local:DragBehavior x:Key="dragging" />
     </Window.Resources>
 
-    <Grid Background="Black">
-        <DataGrid Foreground="White" ItemsSource="{Binding Shifts}" GridLinesVisibility="None" BorderThickness="0" IsHitTestVisible="False" RowBackground="Transparent" Background="Transparent" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="None"  Height="192" Margin="514,23,101.6,0" VerticalAlignment="Top" >
+    <Grid>
+        <Grid.Resources>
+            <Style x:Key="ShiftReaderDataGrid" TargetType="DataGrid">
+                <Setter Property="GridLinesVisibility" Value="None" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="IsHitTestVisible" Value="False" />
+                <Setter Property="RowBackground" Value="Transparent" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="AutoGenerateColumns" Value="False" />
+                <Setter Property="HeadersVisibility" Value="None" />
+            </Style>
+
+            <!-- For Product count cell styling -->
+            <Style x:Key="ProductCountCell" TargetType="DataGridCell" >
+                <Setter Property="Width" Value="auto"/>
+            </Style>
+            <Style x:Key="ProductCountCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ProductCountCell}">
+                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+            </Style>
+            <!-- End of Product count cell styling -->
+
+        </Grid.Resources>
+
+        <DataGrid Foreground="{Binding Foreground}" ItemsSource="{Binding Shifts}" Style="{StaticResource ShiftReaderDataGrid}" Height="143" Margin="482,65,70.6,0" VerticalAlignment="Top" >
             <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Setter Property="FontSize" Value="{Binding FontSize}" />
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="FontSize" Value="{Binding Path=IsCurrent, Converter={StaticResource FontConverter}}" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn  Binding="{Binding Shift}"/>
-
-                <DataGridTextColumn Binding="{Binding Products}" Width="60">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Shift}"/>
+                <DataGridTextColumn Binding="{Binding Products}" CellStyle="{StaticResource ProductCountCellStyle}" />
             </DataGrid.Columns>
 
         </DataGrid>
-        
+
+        <DataGrid ItemsSource="{Binding Shifts}" Margin="0,116,489.6,157">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Hello" Binding="{Binding Shift}" />
+                <DataGridTextColumn Header="Products" Binding="{Binding Products}" />
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+
     </Grid>
+
 </Window>
